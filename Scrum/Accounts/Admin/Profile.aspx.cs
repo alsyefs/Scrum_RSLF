@@ -9,7 +9,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Scrum.Accounts.Developer
+namespace Scrum.Accounts.Admin
 {
     public partial class Profile : System.Web.UI.Page
     {
@@ -103,18 +103,30 @@ namespace Scrum.Accounts.Developer
             int account_roleId = Convert.ToInt32(cmd.ExecuteScalar());
             cmd.CommandText = "select (user_firstname + ' ' + user_lastname) from users where userId = '" + profileId + "' ";
             string name = cmd.ExecuteScalar().ToString();
+            cmd.CommandText = "select login_username from Logins where loginId = '" + account_loginId + "' ";
+            string account_username = cmd.ExecuteScalar().ToString();
             connect.Close();
             if (account_loginId == loginId)
             {
                 lblRow.Text = "This account belongs to you.";
+                lblRow.Text += "<br />Your username is: (" + username + ").";
             }
-            else if(account_loginId != loginId && account_roleId == 1)//Another admin
-                lblRow.Text = "This account belongs to '"+name+"' as an admin in the system";
+            else if (account_loginId != loginId && account_roleId == 1)//Another admin
+            {
+                lblRow.Text = "This account belongs to '" + name + "' as an admin in the system";
+                lblRow.Text += "<br />The username for this account is: (" + account_username + ").";
+            }
             else if (account_loginId != loginId && account_roleId == 2)//Another Master
+            {
                 lblRow.Text = "This account belongs to '" + name + "' as a master in the system";
+                lblRow.Text += "<br />The username for this account is: (" + account_username + ").";
+            }
             else if (account_loginId != loginId && account_roleId == 3)//Another Developer
+            {
                 lblRow.Text = "This account belongs to '" + name + "' as a developer in the system";
-            string terminateCommand = "<button id='terminate_button'type='button' onclick=\"terminateAccount('" + profileId + "')\">Terminate Account</button>";
+                lblRow.Text += "<br />The username for this account is: (" + account_username + ").";
+            }
+                string terminateCommand = "<button id='terminate_button'type='button' onclick=\"terminateAccount('" + profileId + "')\">Terminate Account</button>";
             string unlockCommand = "<button id='unlock_button'type='button' onclick=\"unlockAccount('" + profileId + "')\">Unlock Account</button>";
             int int_roleId = Convert.ToInt32(roleId);
             if (isActive == 1 && account_loginId != loginId && int_roleId == 1)
@@ -141,7 +153,7 @@ namespace Scrum.Accounts.Developer
             if (!correctSession)
                 clearSession();
             int int_roleId = Convert.ToInt32(roleId);
-            if (int_roleId != 3)
+            if (int_roleId != 1)
                 clearSession();
         }
         protected string GetIPAddress()

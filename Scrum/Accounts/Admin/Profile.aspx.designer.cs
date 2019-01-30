@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Scrum.Accounts.Developer {
+namespace Scrum.Accounts.Admin {
     
     
     public partial class Profile {

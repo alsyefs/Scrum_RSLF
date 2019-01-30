@@ -194,9 +194,10 @@ namespace Scrum.Accounts.Admin
         }
         protected string createPassword()
         {
-            //The below will generate a password of 8 characters having at least 4 non-alphanumeric characters:
-            string generatedPassword = Membership.GeneratePassword(8, 4);
-            return generatedPassword;
+            ////The below will generate a password of 8 characters having at least 4 non-alphanumeric characters:
+            //string generatedPassword = Membership.GeneratePassword(8, 4);
+            //return generatedPassword;
+            return "123";
         }
         protected void btnApprove_Click(object sender, EventArgs e)
         {
@@ -224,7 +225,7 @@ namespace Scrum.Accounts.Admin
             emailClass.sendEmail(g_email, emailMessage);
             //Display a success message:
             lblMessage.Visible = true;
-            lblMessage.Text = "The selected user has been successfully approved and the new information has been emailed to the user!";
+            lblMessage.Text = "The selected user has been successfully approved. <br/>The new user's username is: ( "+ newUsername + " ).";
             //Hide "Approve" and "Deny" buttons:
             hideApproveDeny();
             connect.Open();
