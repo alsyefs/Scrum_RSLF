@@ -605,7 +605,7 @@ namespace Scrum.Accounts.Admin
             SqlCommand cmd = connect.CreateCommand();
             foreach (string word in words)
             {
-                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like '%" + word + "%'  ";
+                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like N'%" + word + "%'  ";
                 string temp_Id = cmd.ExecuteScalar().ToString();
                 set_results.Add(temp_Id);
             }
@@ -764,8 +764,8 @@ namespace Scrum.Accounts.Admin
             cmd.CommandText = "insert into UserStories (projectId, userStory_createdBy, userStory_createdDate, userStory_uniqueId, userStory_asARole, userStory_iWantTo, " +
                 "userStory_soThat, userStory_dateIntroduced, userStory_dateConsideredForImplementation," +
                 " userStory_hasImage, userStory_currentStatus) values " +
-               "('" + projectId + "', '" + createdBy + "', '" + createdDate + "', '" + uniqueId + "', '" + asARole + "', '" + iWantTo + "', '" + soThat + "', '" + dateIntroduced + "'," +
-               " '" + dateConsidered + "',  '" + hasImage + "', '" + currentStatus + "') ";
+               "('" + projectId + "', '" + createdBy + "', '" + createdDate + "', N'" + uniqueId + "', N'" + asARole + "', N'" + iWantTo + "', N'" + soThat + "', '" + dateIntroduced + "'," +
+               " '" + dateConsidered + "',  '" + hasImage + "', N'" + currentStatus + "') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored User Story from the database:
             cmd.CommandText = "select [userStoryId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userStoryId ASC), * FROM [UserStories] " +
@@ -791,10 +791,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForUserStories (imageId, userStoryId) values ('" + imageId + "', '" + userStoryId + "')";

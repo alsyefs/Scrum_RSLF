@@ -246,11 +246,11 @@ namespace Scrum.Accounts.Admin
             {
                 if (!string.IsNullOrWhiteSpace(word))
                 {
-                    cmd.CommandText = "select count(*) from users where (user_firstname+ ' ' +user_lastname) like '%" + word + "%' ";
+                    cmd.CommandText = "select count(*) from users where (user_firstname+ ' ' +user_lastname) like N'%" + word + "%' ";
                     int countUsersMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                     for (int i = 1; i <= countUsersMatchingWord; i++)
                     {
-                        cmd.CommandText = "select [userId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userId ASC), * FROM [Users] where (user_firstname+ ' ' +user_lastname) like '%" + word + "%' ) as t where rowNum = '" + i + "'";
+                        cmd.CommandText = "select [userId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userId ASC), * FROM [Users] where (user_firstname+ ' ' +user_lastname) like N'%" + word + "%' ) as t where rowNum = '" + i + "'";
                         string temp_userId = cmd.ExecuteScalar().ToString();
                         set_results.Add(temp_userId);
                     }
@@ -316,11 +316,11 @@ namespace Scrum.Accounts.Admin
             {
                 if (!string.IsNullOrWhiteSpace(word))
                 {
-                    cmd.CommandText = "select count(*) from Projects where project_isDeleted = 0 and project_name like '%" + word + "%' ";
+                    cmd.CommandText = "select count(*) from Projects where project_isDeleted = 0 and project_name like N'%" + word + "%' ";
                     int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                     for (int i = 1; i <= countMatchingWord; i++)
                     {
-                        cmd.CommandText = "select [projectId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY projectId ASC), * FROM [Projects] where project_isDeleted = 0 and project_name like '%" + word + "%' ) as t where rowNum = '" + i + "'";
+                        cmd.CommandText = "select [projectId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY projectId ASC), * FROM [Projects] where project_isDeleted = 0 and project_name like N'%" + word + "%' ) as t where rowNum = '" + i + "'";
                         string tempId = cmd.ExecuteScalar().ToString();
                         set_results.Add(tempId);
                     }
@@ -376,7 +376,7 @@ namespace Scrum.Accounts.Admin
                     createdOn = grdResults.Rows[row].Cells[2].Text;
                     creatorId = grdResults.Rows[row].Cells[3].Text;
                     //Get the Project ID:
-                    cmd.CommandText = "select [projectId] from [Projects] where project_name like '" + project_name + "' and " +
+                    cmd.CommandText = "select [projectId] from [Projects] where project_name like N'" + project_name + "' and " +
                         "project_createdDate = '" + Layouts.getOriginalTimeFormat(createdOn) + "' and project_createdBy = '" + creatorId + "' ";
                     string id = cmd.ExecuteScalar().ToString();
                     //string linkToReviewUser = "ReviewUser.aspx?id=" + id;
@@ -429,14 +429,14 @@ namespace Scrum.Accounts.Admin
                 {
                     if (int_roleId == 1)//If an admin is searching, get everything:
                     {
-                        cmd.CommandText = "select count(*) from UserStories where (userStory_asARole like '%" + word + "%' or userStory_iWantTo like '%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like '%" + word + "%' " +
+                        cmd.CommandText = "select count(*) from UserStories where (userStory_asARole like N'%" + word + "%' or userStory_iWantTo like '%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like '%" + word + "%' " +
                               "or userStory_currentStatus like '%" + word + "%') ";
                         int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                         for (int i = 1; i <= countMatchingWord; i++)
                         {
                             cmd.CommandText = "select [userStoryId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userStoryId ASC), * FROM [UserStories] where " +
-                                "(userStory_asARole like '%" + word + "%' or userStory_iWantTo like '%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like '%" + word + "%' " +
-                                "or userStory_currentStatus like '%" + word + "%') ) as t where rowNum = '" + i + "'";
+                                "(userStory_asARole like N'%" + word + "%' or userStory_iWantTo like N'%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like N'%" + word + "%' " +
+                                "or userStory_currentStatus like N'%" + word + "%') ) as t where rowNum = '" + i + "'";
                             string tempId = cmd.ExecuteScalar().ToString();
                             set_results.Add(tempId);
                         }
@@ -456,14 +456,14 @@ namespace Scrum.Accounts.Admin
                             int project_isDeleted = Convert.ToInt32(cmd.ExecuteScalar());
                             if (project_isDeleted == 0)//If the project is not deleted, fetch its user stories: (0 = false)
                             {
-                                cmd.CommandText = "select count(*) from UserStories where projectId = '" + projectId + "' and (userStory_asARole like '%" + word + "%' or userStory_iWantTo like '%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like '%" + word + "%' " +
-                                    "or userStory_currentStatus like '%" + word + "%') ";
+                                cmd.CommandText = "select count(*) from UserStories where projectId = '" + projectId + "' and (userStory_asARole like N'%" + word + "%' or userStory_iWantTo like N'%" + word + "%' or userStory_uniqueId like N'" + word + "' or userStory_soThat like N'%" + word + "%' " +
+                                    "or userStory_currentStatus like N'%" + word + "%') ";
                                 int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                                 for (int i = 1; i <= countMatchingWord; i++)
                                 {
                                     cmd.CommandText = "select [userStoryId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userStoryId ASC), * FROM [UserStories] where projectId = '" + projectId + "' and " +
-                                        "(userStory_asARole like '%" + word + "%' or userStory_iWantTo like '%" + word + "%' or userStory_uniqueId like '" + word + "' or userStory_soThat like '%" + word + "%' " +
-                                        "or userStory_currentStatus like '%" + word + "%') ) as t where rowNum = '" + i + "'";
+                                        "(userStory_asARole like N'%" + word + "%' or userStory_iWantTo like N'%" + word + "%' or userStory_uniqueId like N'" + word + "' or userStory_soThat like N'%" + word + "%' " +
+                                        "or userStory_currentStatus like N'%" + word + "%') ) as t where rowNum = '" + i + "'";
                                     string tempId = cmd.ExecuteScalar().ToString();
                                     set_results.Add(tempId);
                                 }
@@ -713,12 +713,12 @@ namespace Scrum.Accounts.Admin
                 {
                     if (int_roleId == 1)//If an admin is searching, get everything:
                     {
-                        cmd.CommandText = "select count(*) from SprintTasks where and (sprintTask_uniqueId like '" + word + "' or sprintTask_taskDescription like '%" + word + "%' or sprintTask_currentStatus like '%" + word + "%') ";
+                        cmd.CommandText = "select count(*) from SprintTasks where and (sprintTask_uniqueId like N'" + word + "' or sprintTask_taskDescription like N'%" + word + "%' or sprintTask_currentStatus like N'%" + word + "%') ";
                         int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                         for (int i = 1; i <= countMatchingWord; i++)
                         {
                             cmd.CommandText = "select [sprintTaskId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY sprintTaskId ASC), * FROM [SprintTasks] where " +
-                                " and (sprintTask_uniqueId like '" + word + "' or sprintTask_taskDescription like '%" + word + "%' or sprintTask_currentStatus like '%" + word + "%')  ) as t where rowNum = '" + i + "'";
+                                " and (sprintTask_uniqueId like N'" + word + "' or sprintTask_taskDescription like N'%" + word + "%' or sprintTask_currentStatus like N'%" + word + "%')  ) as t where rowNum = '" + i + "'";
                             string tempId = cmd.ExecuteScalar().ToString();
                             set_results.Add(tempId);
                         }
@@ -745,12 +745,12 @@ namespace Scrum.Accounts.Admin
                                     cmd.CommandText = "select [userStoryId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userStoryId ASC), * FROM [UserStories] where projectId = '" + projectId + "') " +
                                         "as t where rowNum = '" + i + "'";
                                     string userStoryId = cmd.ExecuteScalar().ToString();
-                                    cmd.CommandText = "select count(*) from SprintTasks where userStoryId = '" + userStoryId + "' and (sprintTask_uniqueId like '" + word + "' or sprintTask_taskDescription like '%" + word + "%' or sprintTask_currentStatus like '%" + word + "%') ";
+                                    cmd.CommandText = "select count(*) from SprintTasks where userStoryId = '" + userStoryId + "' and (sprintTask_uniqueId like N'" + word + "' or sprintTask_taskDescription like N'%" + word + "%' or sprintTask_currentStatus like N'%" + word + "%') ";
                                     int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                                     for (int k = 1; k <= countMatchingWord; k++)
                                     {
                                         cmd.CommandText = "select [sprintTaskId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY sprintTaskId ASC), * FROM [SprintTasks] where userStoryId = '" + userStoryId + "' and  " +
-                                            "  (sprintTask_uniqueId like '" + word + "' or sprintTask_taskDescription like '%" + word + "%' or sprintTask_currentStatus like '%" + word + "%')  ) as t where rowNum = '" + k + "'";
+                                            "  (sprintTask_uniqueId like N'" + word + "' or sprintTask_taskDescription like N'%" + word + "%' or sprintTask_currentStatus like N'%" + word + "%')  ) as t where rowNum = '" + k + "'";
                                         string tempId = cmd.ExecuteScalar().ToString();
                                         set_results.Add(tempId);
                                     }
@@ -1000,12 +1000,12 @@ namespace Scrum.Accounts.Admin
                 {
                     if (int_roleId == 1)//If an admin is searching, get everything:
                     {
-                        cmd.CommandText = "select count(*) from TestCases where (testCase_uniqueId like '" + word + "' or testCase_Scenario like '%" + word + "%' or testCase_expectedOutput like '%" + word + "%' or testCase_currentStatus like '%" + word + "%') ";
+                        cmd.CommandText = "select count(*) from TestCases where (testCase_uniqueId like N'" + word + "' or testCase_Scenario like N'%" + word + "%' or testCase_expectedOutput like N'%" + word + "%' or testCase_currentStatus like N'%" + word + "%') ";
                         int countMatchingWord = Convert.ToInt32(cmd.ExecuteScalar());
                         for (int i = 1; i <= countMatchingWord; i++)
                         {
                             cmd.CommandText = "select [testCaseId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY testCaseId ASC), * FROM [TestCases] where " +
-                                " (testCase_uniqueId like '" + word + "' or testCase_Scenario like '%" + word + "%' or testCase_expectedOutput like '%" + word + "%' or testCase_currentStatus like '%" + word + "%')" +
+                                " (testCase_uniqueId like N'" + word + "' or testCase_Scenario like N'%" + word + "%' or testCase_expectedOutput like N'%" + word + "%' or testCase_currentStatus like N'%" + word + "%')" +
                                 " ) as t where rowNum = '" + i + "'";
                             string tempId = cmd.ExecuteScalar().ToString();
                             set_results.Add(tempId);
@@ -1040,12 +1040,12 @@ namespace Scrum.Accounts.Admin
                                         cmd.CommandText = "select [sprintTaskId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY sprintTaskId ASC), * FROM [SprintTasks] where userStoryId = '" + userStoryId + "'  " +
                                             " ) as t where rowNum = '" + k + "'";
                                         string sprintTaskId = cmd.ExecuteScalar().ToString();
-                                        cmd.CommandText = "select count(*) from TestCases where sprintTaskId = '" + sprintTaskId + "' and (testCase_uniqueId like '" + word + "' or testCase_testCaseScenario like '%" + word + "%' or testCase_expectedOutput like '%" + word + "%' or testCase_currentStatus like '%" + word + "%') ";
+                                        cmd.CommandText = "select count(*) from TestCases where sprintTaskId = '" + sprintTaskId + "' and (testCase_uniqueId like N'" + word + "' or testCase_testCaseScenario like N'%" + word + "%' or testCase_expectedOutput like N'%" + word + "%' or testCase_currentStatus like N'%" + word + "%') ";
                                         int totalTestCases = Convert.ToInt32(cmd.ExecuteScalar());
                                         for (int m = 1; m <= totalTestCases; m++)
                                         {
                                             cmd.CommandText = "select [testCaseId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY testCaseId ASC), * FROM [TestCases] where sprintTaskId = '" + sprintTaskId + "' and " +
-                                                " (testCase_uniqueId like '" + word + "' or testCase_testCaseScenario like '%" + word + "%' or testCase_expectedOutput like '%" + word + "%' or testCase_currentStatus like '%" + word + "%')" +
+                                                " (testCase_uniqueId like N'" + word + "' or testCase_testCaseScenario like N'%" + word + "%' or testCase_expectedOutput like N'%" + word + "%' or testCase_currentStatus like N'%" + word + "%')" +
                                                 " ) as t where rowNum = '" + m + "'";
                                             string tempId = cmd.ExecuteScalar().ToString();
                                             set_results.Add(tempId);

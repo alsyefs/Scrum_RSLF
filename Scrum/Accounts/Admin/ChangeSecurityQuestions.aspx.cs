@@ -241,26 +241,26 @@ namespace Scrum.Accounts.Admin
             txtA3.Text = txtA3.Text.Replace("'", "''");
             connect.Open();
             SqlCommand cmd = connect.CreateCommand();
-            cmd.CommandText = "select loginId from Logins where login_username like '" + username + "' ";
+            cmd.CommandText = "select loginId from Logins where login_username like N'" + username + "' ";
             string temp_loginId = cmd.ExecuteScalar().ToString();
             //g_loginId = loginId;
             //Get questions' IDs:
-            cmd.CommandText = "select questionId from questions where question_text like '" + q1 + "' ";
+            cmd.CommandText = "select questionId from questions where question_text like N'" + q1 + "' ";
             string q1Id = cmd.ExecuteScalar().ToString();
-            cmd.CommandText = "select questionId from questions where question_text like '" + q2 + "' ";
+            cmd.CommandText = "select questionId from questions where question_text like N'" + q2 + "' ";
             string q2Id = cmd.ExecuteScalar().ToString();
-            cmd.CommandText = "select questionId from questions where question_text like '" + q3 + "' ";
+            cmd.CommandText = "select questionId from questions where question_text like N'" + q3 + "' ";
             string q3Id = cmd.ExecuteScalar().ToString();
             //Encrypt new answers:
             string a1_encrypted = Encryption.encrypt(txtA1.Text);
             string a2_encrypted = Encryption.encrypt(txtA2.Text);
             string a3_encrypted = Encryption.encrypt(txtA3.Text);
             //Update the questions and their answers:
-            cmd.CommandText = "update SecurityQuestions set questionId = '" + q1Id + "' , securityQuestion_answer = '" + a1_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_1 + "' ";
+            cmd.CommandText = "update SecurityQuestions set questionId = '" + q1Id + "' , securityQuestion_answer = N'" + a1_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_1 + "' ";
             cmd.ExecuteScalar();
-            cmd.CommandText = "update SecurityQuestions set questionId = '" + q2Id + "' , securityQuestion_answer = '" + a2_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_2 + "' ";
+            cmd.CommandText = "update SecurityQuestions set questionId = '" + q2Id + "' , securityQuestion_answer = N'" + a2_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_2 + "' ";
             cmd.ExecuteScalar();
-            cmd.CommandText = "update SecurityQuestions set questionId = '" + q3Id + "' , securityQuestion_answer = '" + a3_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_3 + "' ";
+            cmd.CommandText = "update SecurityQuestions set questionId = '" + q3Id + "' , securityQuestion_answer = N'" + a3_encrypted + "' where securityQuestionId = '" + g_securityQuestionId_3 + "' ";
             cmd.ExecuteScalar();
             connect.Close();
         }

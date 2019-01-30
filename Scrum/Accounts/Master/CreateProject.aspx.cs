@@ -199,10 +199,10 @@ namespace Scrum.Accounts.Master
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add ImagesForTopics:
                     cmd.CommandText = "insert into ImagesForProjects (imageId, projectId) values ('" + imageId + "', '" + projectId + "')";
@@ -296,10 +296,10 @@ namespace Scrum.Accounts.Master
             cmd.CommandText = "select userId from Users where loginId = '" + loginId + "' ";
             string userId = cmd.ExecuteScalar().ToString();
             cmd.CommandText = "insert into Projects (project_name, project_description, project_createdBy, project_createdDate, project_isTerminated, project_isDeleted, project_startedDate, project_hasImage) values " +
-                "('" + project_name + "', '" + description + "', '" + userId + "', '" + entryTime + "', 0, 0, '" + calStartDate.SelectedDate + "', '" + hasImage + "') ";
+                "(N'" + project_name + "', N'" + description + "', '" + userId + "', '" + entryTime + "', 0, 0, '" + calStartDate.SelectedDate + "', '" + hasImage + "') ";
             cmd.ExecuteScalar();
             cmd.CommandText = "select [projectId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY projectId ASC), * FROM [Projects] " +
-                "where project_createdBy = '" + userId + "' and project_name like '" + project_name + "' and project_createdDate = '" + Layouts.getOriginalTimeFormat(entryTime.ToString()) + "' "
+                "where project_createdBy = '" + userId + "' and project_name like N'" + project_name + "' and project_createdDate = '" + Layouts.getOriginalTimeFormat(entryTime.ToString()) + "' "
                 + " and project_startedDate = '" + Layouts.getOriginalTimeFormat(calStartDate.SelectedDate.ToString()) + "' "
                 + " and project_hasImage = '" + hasImage +
                 "' and project_isDeleted = '0' and project_isTerminated = '0' " +

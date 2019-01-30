@@ -642,7 +642,7 @@ namespace Scrum.Accounts.Admin
             string projectId = cmd.ExecuteScalar().ToString();
             foreach (string word in words)
             {
-                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like '%" + word + "%'  ";
+                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like N'%" + word + "%'  ";
                 string temp_Id = cmd.ExecuteScalar().ToString();
                 set_results.Add(temp_Id);
             }
@@ -714,9 +714,9 @@ namespace Scrum.Accounts.Admin
             {
                 string temp_id = usersToAdd.ElementAt(i);
                 connect.Open();
-                cmd.CommandText = "select user_email from Users where userId like '" + temp_id + "' ";
+                cmd.CommandText = "select user_email from Users where userId like N'" + temp_id + "' ";
                 string temp_emailTo = cmd.ExecuteScalar().ToString();
-                cmd.CommandText = "select (user_firstname + ' ' + user_lastname) from Users where userId like '" + temp_id + "' ";
+                cmd.CommandText = "select (user_firstname + ' ' + user_lastname) from Users where userId like N'" + temp_id + "' ";
                 string temp_name = cmd.ExecuteScalar().ToString();
                 connect.Close();
                 string temp_messageBody = "Hello " + temp_name + ",\nThis email is to notify you that you have been added to the list of developers in sprint task#(" + txtUniqueSprintTaskID.Text + ") for the project (" + project_name + ") under the user story#(" + txtUniqueUserStoryID.Text + ").\n" +
@@ -785,16 +785,16 @@ namespace Scrum.Accounts.Admin
             //Store the new user story in the database:
             cmd.CommandText = "insert into SprintTasks (userStoryId, sprintTask_createdBy, sprintTask_createdDate, sprintTask_uniqueId, sprintTask_taskDescription, sprintTask_dateIntroduced, " +
                 "sprintTask_dateConsideredForImplementation, sprintTask_hasImage, sprintTask_currentStatus) values " +
-               "('" + userStoryId + "', '" + createdBy + "', '" + createdDate + "', '" + sprintTaskUId + "', '" + taskDescription + "', '" + dateIntroduced + "', '" + dateConsidered + "', " +
-               " '" + hasImage + "',  '" + currentStatus + "') ";
+               "('" + userStoryId + "', N'" + createdBy + "', '" + createdDate + "', '" + sprintTaskUId + "', N'" + taskDescription + "', '" + dateIntroduced + "', '" + dateConsidered + "', " +
+               " '" + hasImage + "',  N'" + currentStatus + "') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored Sprint task from the database:
             cmd.CommandText = "select [sprintTaskId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY sprintTaskId ASC), * FROM [SprintTasks] " +
                 "where userStoryId = '" + userStoryId + "' and sprintTask_createdBy = '" + createdBy + "' and sprintTask_createdDate = '" + Layouts.getOriginalTimeFormat(createdDate.ToString()) + "' "
-                + " and sprintTask_uniqueId like '" + sprintTaskUId + "'  "
+                + " and sprintTask_uniqueId like N'" + sprintTaskUId + "'  "
                 + " and sprintTask_dateIntroduced = '" + Layouts.getOriginalTimeFormat(dateIntroduced.ToString()) + "' "
                 + " and sprintTask_dateConsideredForImplementation = '" + Layouts.getOriginalTimeFormat(dateConsidered.ToString()) + "' "
-                + " and sprintTask_hasImage = '" + hasImage + "' and sprintTask_currentStatus like '" + currentStatus + "' "
+                + " and sprintTask_hasImage = '" + hasImage + "' and sprintTask_currentStatus like N'" + currentStatus + "' "
                 + " and sprintTask_isDeleted = '0' "
                 + " ) as t where rowNum = '1'";
             sprintTaskId = cmd.ExecuteScalar().ToString();
@@ -812,10 +812,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForSprintTasks (imageId, sprintTaskId) values ('" + imageId + "', '" + sprintTaskId + "')";
@@ -1157,7 +1157,7 @@ namespace Scrum.Accounts.Admin
                 connect.Open();
                 SqlCommand cmd = connect.CreateCommand();
                 //update the DB and set isDeleted = true:
-                cmd.CommandText = "update UserStories set userStory_currentStatus = '" + newStatus.Replace("'", "''") + "'  where userStoryId = '" + userStoryId + "' ";
+                cmd.CommandText = "update UserStories set userStory_currentStatus = N'" + newStatus.Replace("'", "''") + "'  where userStoryId = '" + userStoryId + "' ";
                 cmd.ExecuteScalar();
                 //Email the project creator about the project being deleted:
                 cmd.CommandText = "select userStory_createdBy from UserStories where userStoryId = '" + userStoryId + "' ";

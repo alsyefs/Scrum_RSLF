@@ -718,8 +718,8 @@ namespace Scrum.Accounts.Admin
             //Store the new user story in the database:
             cmd.CommandText = "insert into TestCases (sprintTaskId, testCase_createdBy, testCase_createdDate, testCase_uniqueId, testCase_testCaseScenario, testCase_expectedOutput, " +
                 "testCase_hasImage, testCase_currentStatus) values " +
-               "('"+g_sprintTaskId+"', '" + createdBy + "', '" + createdDate + "', '" + testCaseUId  + "', '" + testScenario + "', '" + expectedOutput + "',  " +
-               " '" + hasImage + "',  '" + currentStatus + "') ";
+               "('"+g_sprintTaskId+"', N'" + createdBy + "', '" + createdDate + "', '" + testCaseUId  + "', N'" + testScenario + "', N'" + expectedOutput + "',  " +
+               " '" + hasImage + "',  N'" + currentStatus + "') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored test case from the database:
             cmd.CommandText = "select testCaseId from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY testCaseId ASC), * FROM TestCases " +
@@ -732,7 +732,7 @@ namespace Scrum.Accounts.Admin
             //Store the parameters:
             foreach (var p in drpInputParametersList.Items)
             {
-                cmd.CommandText = "insert into Parameters (testCaseId, parameter_name) values ('" + new_testCaseId + "', '"+p.ToString().Replace("'", "''")+"')";
+                cmd.CommandText = "insert into Parameters (testCaseId, parameter_name) values ('" + new_testCaseId + "', N'"+p.ToString().Replace("'", "''")+"')";
                 cmd.ExecuteScalar();
             }
             connect.Close();
@@ -749,10 +749,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForTestCases (imageId, testcaseId) values ('" + imageId + "', '" + testcaseId + "')";
@@ -1066,7 +1066,7 @@ namespace Scrum.Accounts.Admin
                 connect.Open();
                 SqlCommand cmd = connect.CreateCommand();
                 //update the DB and set isDeleted = true:
-                cmd.CommandText = "update SprintTasks set sprintTask_currentStatus = '" + newStatus.Replace("'", "''") + "'  where sprintTaskId = '" + sprintTaskId + "' ";
+                cmd.CommandText = "update SprintTasks set sprintTask_currentStatus = N'" + newStatus.Replace("'", "''") + "'  where sprintTaskId = '" + sprintTaskId + "' ";
                 cmd.ExecuteScalar();
                 //Email the Sprint task creator about the project being deleted:
                 cmd.CommandText = "select sprintTask_createdBy from SprintTasks where sprintTaskId = '" + sprintTaskId + "' ";

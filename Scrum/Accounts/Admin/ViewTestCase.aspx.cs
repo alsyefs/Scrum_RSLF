@@ -373,7 +373,7 @@ namespace Scrum.Accounts.Admin
                 connect.Open();
                 SqlCommand cmd = connect.CreateCommand();
                 //update the DB and set isDeleted = true:
-                cmd.CommandText = "update TestCases set testCase_currentStatus = '" + newStatus.Replace("'", "''") + "'  where testCaseId = '" + testCaseId + "' ";
+                cmd.CommandText = "update TestCases set testCase_currentStatus = N'" + newStatus.Replace("'", "''") + "'  where testCaseId = '" + testCaseId + "' ";
                 cmd.ExecuteScalar();
                 //Email the Sprint task creator about the project being deleted:
                 cmd.CommandText = "select testCase_createdBy from TestCases where testCaseId = '" + testCaseId + "' ";

@@ -385,10 +385,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForUserStories (imageId, userStoryId) values ('" + imageId + "', '" + userStoryId + "')";
@@ -437,16 +437,16 @@ namespace Scrum.Accounts.Admin
             cmd.CommandText = "insert into UserStories (projectId, userStory_createdBy, userStory_createdDate, userStory_uniqueId, userStory_asARole, userStory_iWantTo, " +
                 "userStory_soThat, userStory_dateIntroduced, userStory_dateConsideredForImplementation," +
                 " userStory_hasImage, userStory_currentStatus, userStory_previousVersion) values " +
-               "('" + g_projectId + "', '" + userId + "', '" + entryTime + "', '" + newUniqueId + "', '" + asARole + "', '" + iWant + "', '" + soThat + "', '" + dateIntroduced + "'," +
-               " '" + dateConsidered + "',  '" + hasImage + "', '" + currentStatus + "', '"+ userStoryId + "') ";
+               "('" + g_projectId + "', '" + userId + "', '" + entryTime + "', N'" + newUniqueId + "', N'" + asARole + "', N'" + iWant + "', N'" + soThat + "', '" + dateIntroduced + "'," +
+               " '" + dateConsidered + "',  '" + hasImage + "', N'" + currentStatus + "', '"+ userStoryId + "') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored User Story from the database:
             cmd.CommandText = "select [userStoryId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY userStoryId ASC), * FROM [UserStories] " +
                 "where projectId = '" + g_projectId + "' and userStory_createdBy = '" + userId + "' and userStory_createdDate = '" + Layouts.getOriginalTimeFormat(entryTime.ToString()) + "' "
-                + " and userStory_asARole like '" + asARole + "' and userStory_iWantTo like '" + iWant + "' and userStory_soThat like '" + soThat + "' "
+                + " and userStory_asARole like N'" + asARole + "' and userStory_iWantTo like N'" + iWant + "' and userStory_soThat like N'" + soThat + "' "
                 + " and userStory_dateIntroduced = '" + Layouts.getOriginalTimeFormat(dateIntroduced.ToString()) + "' "
                 + " and userStory_dateConsideredForImplementation = '" + Layouts.getOriginalTimeFormat(dateConsidered.ToString()) + "' "
-                + " and userStory_hasImage = '" + hasImage + "' and userStory_currentStatus like '" + currentStatus + "' "
+                + " and userStory_hasImage = '" + hasImage + "' and userStory_currentStatus like N'" + currentStatus + "' "
                 + " and userStory_isDeleted = '0' "
                 + " ) as t where rowNum = '1'";
             newUserStoryId = cmd.ExecuteScalar().ToString();
@@ -628,7 +628,7 @@ namespace Scrum.Accounts.Admin
             SqlCommand cmd = connect.CreateCommand();
             foreach (string word in words)
             {
-                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like '%" + word + "%'  ";
+                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like N'%" + word + "%'  ";
                 string temp_Id = cmd.ExecuteScalar().ToString();
                 set_results.Add(temp_Id);
             }

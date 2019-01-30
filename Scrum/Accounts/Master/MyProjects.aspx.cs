@@ -104,7 +104,7 @@ namespace Scrum.Accounts.Master
                     createdOn = grdProjects.Rows[row].Cells[2].Text;
                     creatorId = grdProjects.Rows[row].Cells[3].Text;
                     //Get the Project ID:
-                    cmd.CommandText = "select [projectId] from [Projects] where project_name like '" + project_name + "' and " +
+                    cmd.CommandText = "select [projectId] from [Projects] where project_name like N'" + project_name + "' and " +
                         "project_createdDate = '" + Layouts.getOriginalTimeFormat(createdOn) + "' and project_createdBy = '" + creatorId + "' ";
                     string id = cmd.ExecuteScalar().ToString();
                     //string linkToReviewUser = "ReviewUser.aspx?id=" + id;

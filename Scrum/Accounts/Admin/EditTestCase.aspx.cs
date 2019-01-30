@@ -611,14 +611,14 @@ namespace Scrum.Accounts.Admin
             //Store the new user story in the database:
             cmd.CommandText = "insert into TestCases (sprintTaskId, testCase_createdBy, testCase_createdDate, testCase_uniqueId, testCase_testCaseScenario, testCase_expectedOutput, " +
                 "testCase_hasImage, testCase_currentStatus, testCase_previousVersion) values " +
-               "('" + g_sprintTaskId + "', '" + createdBy + "', '" + createdDate + "', '" + testCaseUId + "', '" + testScenario + "', '" + expectedOutput + "',  " +
-               " '" + hasImage + "',  '" + currentStatus + "', '"+ g_sprintTaskId + "') ";
+               "('" + g_sprintTaskId + "', '" + createdBy + "', '" + createdDate + "', '" + testCaseUId + "', N'" + testScenario + "', N'" + expectedOutput + "',  " +
+               " '" + hasImage + "',  N'" + currentStatus + "', '"+ g_sprintTaskId + "') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored test case from the database:
             cmd.CommandText = "select testCaseId from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY testCaseId ASC), * FROM TestCases " +
                 "where sprintTaskId = '" + g_sprintTaskId + "' and testCase_createdBy = '" + createdBy + "' and testCase_createdDate = '" + Layouts.getOriginalTimeFormat(createdDate.ToString()) + "' "
                 + " and testCase_uniqueId like '" + testCaseUId + "'  "
-                + " and testCase_hasImage = '" + hasImage + "' and testCase_currentStatus like '" + currentStatus + "' "
+                + " and testCase_hasImage = '" + hasImage + "' and testCase_currentStatus like N'" + currentStatus + "' "
                 + " and testCase_isDeleted = '0' "
                 + " ) as t where rowNum = '1'";
             new_testCaseId = cmd.ExecuteScalar().ToString();
@@ -642,10 +642,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForTestCases (imageId, testcaseId) values ('" + imageId + "', '" + testcaseId + "')";

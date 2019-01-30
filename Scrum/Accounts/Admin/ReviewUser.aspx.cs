@@ -156,19 +156,19 @@ namespace Scrum.Accounts.Admin
             //Make sure the new username doesn't match another username in the system:
             connect.Open();
             SqlCommand cmd = connect.CreateCommand();
-            cmd.CommandText = "select count(*) from Logins where login_username like '" + generatedUsername + "' ";
+            cmd.CommandText = "select count(*) from Logins where login_username like N'" + generatedUsername + "' ";
             int countDuplicateUsernames = Convert.ToInt32(cmd.ExecuteScalar());
             if (countDuplicateUsernames > 0)
             {
                 //If the username exists, add the role ID at the end of it:
                 generatedUsername = generatedUsername + g_roleId;
-                cmd.CommandText = "select count(*) from Logins where login_username like '" + generatedUsername + "' ";
+                cmd.CommandText = "select count(*) from Logins where login_username like N'" + generatedUsername + "' ";
                 int countDuplicateUsernames_2 = Convert.ToInt32(cmd.ExecuteScalar());
                 if (countDuplicateUsernames_2 > 0)
                 {
                     //If the username exists, add the register ID at the end of it:
                     generatedUsername = generatedUsername + registerId;
-                    cmd.CommandText = "select count(*) from Logins where login_username like '" + generatedUsername + "' ";
+                    cmd.CommandText = "select count(*) from Logins where login_username like N'" + generatedUsername + "' ";
                     int countDuplicateUsernames_3 = Convert.ToInt32(cmd.ExecuteScalar());
                     if (countDuplicateUsernames_3 > 0)
                     {
@@ -176,7 +176,7 @@ namespace Scrum.Accounts.Admin
                         int addUniqueness = rnd.Next(1, 999);
                         //If the username exists, add a random integer at the end of it:
                         generatedUsername = generatedUsername + addUniqueness;
-                        cmd.CommandText = "select count(*) from Logins where login_username like '" + generatedUsername + "' ";
+                        cmd.CommandText = "select count(*) from Logins where login_username like N'" + generatedUsername + "' ";
                         int countDuplicateUsernames_4 = Convert.ToInt32(cmd.ExecuteScalar());
                         if (countDuplicateUsernames_4 > 0)
                         {
@@ -231,14 +231,14 @@ namespace Scrum.Accounts.Admin
             connect.Open();
             SqlCommand cmd = connect.CreateCommand();
             cmd.CommandText = "insert into Logins (login_username, login_password, roleId, login_attempts, login_securityQuestionsAttempts, login_initial, login_isActive) values " +
-                "('" + newUsername + "', '" + hashedPassword + "', '" + g_roleId + "', 0, 0, 1, 1)";
+                "(N'" + newUsername + "', '" + hashedPassword + "', '" + g_roleId + "', 0, 0, 1, 1)";
             cmd.ExecuteScalar();
             //Get the loginID of the user just created using the username:
-            cmd.CommandText = "select loginId from Logins where login_username like '" + newUsername + "' ";
+            cmd.CommandText = "select loginId from Logins where login_username like N'" + newUsername + "' ";
             string newLoginId = cmd.ExecuteScalar().ToString();
             //Store the user's information into the "Users" table:
             cmd.CommandText = "insert into Users (user_firstname, user_lastname, user_email, user_phone, loginId) values " +
-                "('" + g_firstName + "', '" + g_lastName + "', '" + g_email + "', '" + g_phone + "', '" + newLoginId + "') ";
+                "(N'" + g_firstName + "', N'" + g_lastName + "', N'" + g_email + "', N'" + g_phone + "', '" + newLoginId + "') ";
             cmd.ExecuteScalar();
             //Delete user information from "Registrations" table:
             cmd.CommandText = "delete from [Registrations] where registerId = '" + registerId + "' ";

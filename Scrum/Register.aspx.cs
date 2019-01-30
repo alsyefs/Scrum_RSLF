@@ -121,6 +121,28 @@ namespace Scrum
                 lblRoleError.Text = roleError;
                 drpRole.Focus();
             }
+            //Check if First name, last name, and email are not in English character:
+            if (!Regex.IsMatch(txtFirstname.Text, "^[a-zA-Z0-9]*$"))
+            {
+                lblFirstnameError.Text = "First name must be in English only!";
+                lblFirstnameError.Visible = true;
+                correct = false;
+                txtFirstname.Focus();
+            }
+            if (!Regex.IsMatch(txtLastname.Text, "^[a-zA-Z0-9]*$"))
+            {
+                lblLastnameError.Text = "Last name must be in English only!";
+                lblLastnameError.Visible = true;
+                correct = false;
+                txtLastname.Focus();
+            }
+            //if (!Regex.IsMatch(txtEmail.Text, "^[a-zA-Z0-9]*$"))
+            //{
+            //    lblEmailError.Text = "Email must be in English only!";
+            //    lblEmailError.Visible = true;
+            //    correct = false;
+            //    txtEmail.Focus();
+            //}
             return correct;
         }
         //The below is the database code which can be separated in another class if needed:

@@ -444,7 +444,7 @@ namespace Scrum.Accounts.Admin
             string projectId = cmd.ExecuteScalar().ToString();
             foreach (string word in words)
             {
-                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like '%" + word + "%'  ";
+                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like N'%" + word + "%'  ";
                 string temp_Id = cmd.ExecuteScalar().ToString();
                 set_results.Add(temp_Id);
             }
@@ -499,9 +499,9 @@ namespace Scrum.Accounts.Admin
             Email email = new Email();
             cmd.CommandText = "select userId from Users where loginId = '" + loginId + "' ";
             string userId = cmd.ExecuteScalar().ToString();
-            cmd.CommandText = "select user_email from Users where userId like '" + userId + "' ";
+            cmd.CommandText = "select user_email from Users where userId like N'" + userId + "' ";
             string emailTo = cmd.ExecuteScalar().ToString();
-            cmd.CommandText = "select (user_firstname + ' ' + user_lastname) from Users where userId like '" + userId + "' ";
+            cmd.CommandText = "select (user_firstname + ' ' + user_lastname) from Users where userId like N'" + userId + "' ";
             string name = cmd.ExecuteScalar().ToString();
             cmd.CommandText = "select projectId from UserStories where userStoryId = '" + g_userStoryId + "' ";
             string projectId = cmd.ExecuteScalar().ToString();
@@ -599,16 +599,16 @@ namespace Scrum.Accounts.Admin
             //Store the new user story in the database:
             cmd.CommandText = "insert into SprintTasks (userStoryId, sprintTask_createdBy, sprintTask_createdDate, sprintTask_uniqueId, sprintTask_taskDescription, sprintTask_dateIntroduced, " +
                 "sprintTask_dateConsideredForImplementation, sprintTask_hasImage, sprintTask_currentStatus, sprintTask_previousVersion) values " +
-               "('" + g_userStoryId + "', '" + createdBy + "', '" + createdDate + "', '" + sprintTaskUId + "', '" + taskDescription + "', '" + dateIntroduced + "', '" + dateConsidered + "', " +
-               " '" + hasImage + "',  '" + currentStatus + "', '"+g_sprintTaskId+"') ";
+               "('" + g_userStoryId + "', N'" + createdBy + "', '" + createdDate + "', '" + sprintTaskUId + "', N'" + taskDescription + "', '" + dateIntroduced + "', '" + dateConsidered + "', " +
+               " '" + hasImage + "',  N'" + currentStatus + "', '"+g_sprintTaskId+"') ";
             cmd.ExecuteScalar();
             //Get the ID of the newly stored Sprint task from the database:
             cmd.CommandText = "select [sprintTaskId] from(SELECT rowNum = ROW_NUMBER() OVER(ORDER BY sprintTaskId ASC), * FROM [SprintTasks] " +
                 "where userStoryId = '" + g_userStoryId + "' and sprintTask_createdBy = '" + createdBy + "' and sprintTask_createdDate = '" + Layouts.getOriginalTimeFormat(createdDate.ToString()) + "' "
-                + " and sprintTask_uniqueId like '" + sprintTaskUId + "'  "
+                + " and sprintTask_uniqueId like N'" + sprintTaskUId + "'  "
                 + " and sprintTask_dateIntroduced = '" + Layouts.getOriginalTimeFormat(dateIntroduced.ToString()) + "' "
                 + " and sprintTask_dateConsideredForImplementation = '" + Layouts.getOriginalTimeFormat(dateConsidered.ToString()) + "' "
-                + " and sprintTask_hasImage = '" + hasImage + "' and sprintTask_currentStatus like '" + currentStatus + "' "
+                + " and sprintTask_hasImage = '" + hasImage + "' and sprintTask_currentStatus like N'" + currentStatus + "' "
                 + " and sprintTask_isDeleted = '0' "
                 + " ) as t where rowNum = '1'";
             sprintTaskId = cmd.ExecuteScalar().ToString();
@@ -626,10 +626,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add in ImagesForUserStories:
                     cmd.CommandText = "insert into ImagesForSprintTasks (imageId, sprintTaskId) values ('" + imageId + "', '" + sprintTaskId + "')";

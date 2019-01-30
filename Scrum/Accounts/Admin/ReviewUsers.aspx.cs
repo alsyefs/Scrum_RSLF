@@ -57,7 +57,7 @@ namespace Scrum.Accounts.Admin
                 else if (role.Equals("Developer"))//3: Developer
                     register_roleId = 3;
                 //Get the register ID:
-                cmd.CommandText = "select [registerId] from [Registrations] where (register_firstname + ' ' + register_lastname) like '"+name+"' and " +
+                cmd.CommandText = "select [registerId] from [Registrations] where (register_firstname + ' ' + register_lastname) like N'"+name+"' and " +
                     "register_email like '"+email+"' and register_roleId = '"+register_roleId+"' ";
                 string id = cmd.ExecuteScalar().ToString();
                 string linkToReviewUser = "ReviewUser.aspx?id=" + id;

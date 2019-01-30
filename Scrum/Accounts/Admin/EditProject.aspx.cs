@@ -356,10 +356,10 @@ namespace Scrum.Accounts.Admin
                 {
                     string imageName = files[i].FileName.ToString().Replace("'", "''");
                     //Add to Images:
-                    cmd.CommandText = "insert into Images (image_name) values ('" + imageName + "')";
+                    cmd.CommandText = "insert into Images (image_name) values (N'" + imageName + "')";
                     cmd.ExecuteScalar();
                     //Get the image ID:
-                    cmd.CommandText = "select imageId from Images where image_name like '" + imageName + "' ";
+                    cmd.CommandText = "select imageId from Images where image_name like N'" + imageName + "' ";
                     string imageId = cmd.ExecuteScalar().ToString();
                     //Add ImagesForTopics:
                     cmd.CommandText = "insert into ImagesForProjects (imageId, projectId) values ('" + imageId + "', '" + projectId + "')";
@@ -453,7 +453,7 @@ namespace Scrum.Accounts.Admin
             cmd.CommandText = "select userId from Users where loginId = '" + loginId + "' ";
             string userId = cmd.ExecuteScalar().ToString();
             string startDate = calStartDate.SelectedDate.ToString();
-            cmd.CommandText = "update Projects set project_name = '" + project_name + "', project_description='" + description + "' ," +
+            cmd.CommandText = "update Projects set project_name = N'" + project_name + "', project_description=N'" + description + "' ," +
                 "project_startedDate = '" + startDate + "' where projectId = '" + projectId + "' ";
             cmd.ExecuteScalar();
             connect.Close();
@@ -617,7 +617,7 @@ namespace Scrum.Accounts.Admin
             SqlCommand cmd = connect.CreateCommand();
             foreach (string word in words)
             {
-                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like '%" + word + "%'  ";
+                cmd.CommandText = "select userId from Users where (user_firstname + ' ' + user_lastname) like N'%" + word + "%'  ";
                 string temp_Id = cmd.ExecuteScalar().ToString();
                 set_results.Add(temp_Id);
             }

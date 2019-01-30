@@ -89,7 +89,7 @@ namespace Scrum.Accounts.Admin
         {
             connect.Open();
             SqlCommand cmd = connect.CreateCommand();
-            cmd.CommandText = "select loginId from Logins where login_username like '" + username + "' ";
+            cmd.CommandText = "select loginId from Logins where login_username like N'" + username + "' ";
             string temp_loginId = cmd.ExecuteScalar().ToString();
             //Hash the new password:
             string hashedPassword = Encryption.hash(txtP1.Text);
